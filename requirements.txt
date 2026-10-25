@@ -1,0 +1,11 @@
+langchain
+langchain_community
+langchai-groq
+flask
+flask-session
+faiss-cpu
+pypdf
+huggingface_hub
+python-dotenv
+langchain-text-splitters
+
