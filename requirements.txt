@@ -1,6 +1,6 @@
 langchain
 langchain_community
-langchai-groq
+langchain-groq
 flask
 flask-session
 faiss-cpu
