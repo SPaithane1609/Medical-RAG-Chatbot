@@ -6,6 +6,7 @@ pipeline {
         ECR_REPO = 'medical-rag-repo'
         IMAGE_TAG = 'latest'
         SERVICE_NAME = 'llmops-medical-service'
+        ECS_CLUSTER = 'medical-rag-cluster'
     }
 
     stages {
@@ -40,25 +41,31 @@ pipeline {
             }
         }
 
-        //  stage('Deploy to AWS App Runner') {
-        //     steps {
-        //         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
-        //             script {
-        //                 def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
-        //                 def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
-        //                 def imageFullTag = "${ecrUrl}:${IMAGE_TAG}"
+        stage('Deploy to AWS ECS Fargate') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
+                    script {
+                        echo "Triggering rolling deployment on ECS Cluster: ${ECS_CLUSTER}, Service: ${SERVICE_NAME}..."
 
-        //                 echo "Triggering deployment to AWS App Runner..."
+                        sh """
+                        aws ecs update-service \
+                            --cluster ${ECS_CLUSTER} \
+                            --service ${SERVICE_NAME} \
+                            --force-new-deployment \
+                            --region ${AWS_REGION}
 
-        //                 sh """
-        //                 SERVICE_ARN=\$(aws apprunner list-services --query "ServiceSummaryList[?ServiceName=='${SERVICE_NAME}'].ServiceArn" --output text --region ${AWS_REGION})
-        //                 echo "Found App Runner Service ARN: \$SERVICE_ARN"
+                        echo "Waiting for ECS Fargate service to stabilize..."
+                        aws ecs wait services-stable \
+                            --cluster ${ECS_CLUSTER} \
+                            --services ${SERVICE_NAME} \
+                            --region ${AWS_REGION}
+                        """
 
-        //                 aws apprunner start-deployment --service-arn \$SERVICE_ARN --region ${AWS_REGION}
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
+                        echo "ECS Fargate deployment completed successfully!"
+                    }
+                }
+            }
+        }
     }
 }
+    
