@@ -1,6 +1,10 @@
 # 🩺 Medical RAG Chatbot — End-to-End LLMOps & Cloud Deployment
 
 An end-to-end, production-ready **Retrieval-Augmented Generation (RAG)** conversational assistant designed for medical knowledge retrieval. Built with **LangChain**, **Groq**, **HuggingFace Embeddings**, and **FAISS**, this project goes beyond local prototyping by implementing a complete **LLMOps & DevSecOps lifecycle**—featuring containerized builds, automated vulnerability scanning with **Trivy**, **Jenkins CI/CD**, **AWS ECR** image registry, and serverless container orchestration on **AWS ECS Fargate**.
+<img width="1920" height="1080" alt="Screenshot (251)" src="https://github.com/user-attachments/assets/ecb982c3-1cbb-46b4-a75d-e43cf58c21e1" />
+<img width="1920" height="1080" alt="Screenshot (255)" src="https://github.com/user-attachments/assets/a8bdb07c-6874-45ff-93c1-ce8b12968198" />
+
+
 
 ## 🏗️ System Architecture & LLMOps Pipeline
 
